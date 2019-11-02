@@ -80,6 +80,29 @@ server.delete('/api/users/:id', (req,res) => {
     });
 })
 
+server.put('api/users/:id', (req,res) => {
+    if(req.headers.name != null && req.headers.bio != null){
+        let user = {
+            name: req.headers.name,
+            bio: req.headers.bio
+        }
+        db.update(req.params.id, user)
+        .catch((err) => {
+            res.status(500);
+            res.send({ error: "The user information could not be modified." });
+        })
+        .then((res) => {
+            console.log(res);
+            res.status(200);
+            res.send(res);
+        })
+    }
+    else{
+        res.status(400);
+        res.send({ errorMessage: "Please provide name and bio for the user." });
+    }
+})
+
 // watch for connections on port 5000
 server.listen(5000, () =>
     console.log('Server running on http://localhost:5000')
